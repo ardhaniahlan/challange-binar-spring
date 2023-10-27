@@ -1,8 +1,9 @@
 package com.challangebinarspring.binarfud.service.impl;
 
+import com.challangebinarspring.binarfud.entity.Merchant;
 import com.challangebinarspring.binarfud.entity.User;
-import com.challangebinarspring.binarfud.repository.UserRepository;
-import com.challangebinarspring.binarfud.service.UserService;
+import com.challangebinarspring.binarfud.repository.MerchantRepository;
+import com.challangebinarspring.binarfud.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +13,15 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class UserImpl implements UserService {
+public class MerchantImpl implements MerchantService {
 
     @Autowired
-    public UserRepository userRepository;
+    public MerchantRepository merchantRepository;
 
     @Override
-    public Map save(User user) {
+    public Map save(Merchant merchant) {
         Map map = new HashMap<>();
-        User doSave = userRepository.save(user);
+        Merchant doSave = merchantRepository.save(merchant);
 
         map.put("Data", doSave);
         map.put("message","Success");
@@ -30,27 +31,27 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public Map update(User user) {
+    public Map update(Merchant merchant) {
         Map map = new HashMap<>();
-        User cekData = userRepository.getById(user.getId());
+        Merchant cekData = merchantRepository.getById(merchant.getId());
         if (cekData == null){
             map.put("message", "Data not Found");
             return map;
         }
 
-        cekData.setUsername(user.username);
-        cekData.setEmail(user.email);
-        cekData.setPassword(user.password);
+        cekData.setMerchantName(merchant.merchantName);
+        cekData.setMerchantLocation(merchant.merchantLocation);
+        cekData.setOpen(merchant.open);
 
-        User doUpdate = userRepository.save(cekData);
+        Merchant doUpdate = merchantRepository.save(cekData);
         map.put("Data", doUpdate);
         return map;
     }
 
     @Override
-    public Map delete(Long user) {
+    public Map delete(Long merchant) {
         Map map = new HashMap<>();
-        User cekData = userRepository.getById(user);
+        Merchant cekData = merchantRepository.getById(merchant);
         if (cekData == null){
             map.put("message", "Data not Found");
             return map;
@@ -58,15 +59,15 @@ public class UserImpl implements UserService {
 
         cekData.setDeleted_date(new Date());
 
-        User doDelete = userRepository.save(cekData);
+        Merchant doDelete = merchantRepository.save(cekData);
         map.put("Data", doDelete);
         return map;
     }
 
     @Override
-    public Map getById(Long user) {
+    public Map getById(Long merchant) {
         Map map = new HashMap<>();
-        Optional<User> getBaseOptional = userRepository.findById(user);
+        Optional<Merchant> getBaseOptional = merchantRepository.findById(merchant);
         if(getBaseOptional.isEmpty()){
             map.put("message", "Data not Found");
             return map;

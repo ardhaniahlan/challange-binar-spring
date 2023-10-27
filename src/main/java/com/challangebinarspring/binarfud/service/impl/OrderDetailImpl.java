@@ -25,7 +25,6 @@ public class OrderDetailImpl implements OrderDetailService {
         OrderDetail doSave = orderDetailRepository.save(orderDetail);
 
         map.put("Data", doSave);
-        map.put("data",doSave);
         map.put("message","Success");
         map.put("status",200);
 

@@ -19,11 +19,11 @@ public class Merchant extends AbstractDate implements Serializable {
     private Long id;
 
     @Column(name = "merchant_name")
-    private String merchantName;
+    public String merchantName;
 
     @Column(name = "merchant_location")
-    private String merchantLocation;
+    public String merchantLocation;
 
     @Column(name = "open")
-    private boolean open;
+    public boolean open;
 }

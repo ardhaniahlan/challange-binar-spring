@@ -19,10 +19,10 @@ public class Product extends AbstractDate implements Serializable {
     private Long id;
 
     @Column(name = "product_name")
-    private String productName;
+    public String productName;
 
     @Column(name = "price")
-    private Double price;
+    public Double price;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "merchant_id")
