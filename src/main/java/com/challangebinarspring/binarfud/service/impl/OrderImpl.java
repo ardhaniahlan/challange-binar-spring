@@ -1,8 +1,8 @@
 package com.challangebinarspring.binarfud.service.impl;
 
-import com.challangebinarspring.binarfud.entity.User;
-import com.challangebinarspring.binarfud.repository.UserRepository;
-import com.challangebinarspring.binarfud.service.UserService;
+import com.challangebinarspring.binarfud.entity.Order;
+import com.challangebinarspring.binarfud.repository.OrderRepository;
+import com.challangebinarspring.binarfud.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class UserImpl implements UserService {
+public class OrderImpl implements OrderService {
 
     @Autowired
-    public UserRepository userRepository;
+    public OrderRepository orderRepository;
 
     @Override
-    public Map save(User user) {
+    public Map save(Order order) {
         Map map = new HashMap<>();
-        User doSave = userRepository.save(user);
+        Order doSave = orderRepository.save(order);
 
         map.put("Data", doSave);
         map.put("data",doSave);
@@ -31,27 +31,27 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public Map update(User user) {
+    public Map update(Order order) {
         Map map = new HashMap<>();
-        User cekData = userRepository.getById(user.getId());
+        Order cekData = orderRepository.getById(order.getId());
         if (cekData == null){
             map.put("message", "Data not Found");
             return map;
         }
 
-        cekData.setUsername(user.username);
-        cekData.setEmail(user.email);
-        cekData.setPassword(user.password);
+        cekData.setDestinationAddress(order.destinationAddress);
+        cekData.setOrderTime(order.orderTime);
+        cekData.setComplated(order.complated);
 
-        User doUpdate = userRepository.save(cekData);
+        Order doUpdate = orderRepository.save(cekData);
         map.put("Data", doUpdate);
         return map;
     }
 
     @Override
-    public Map delete(Long user) {
+    public Map delete(Long order) {
         Map map = new HashMap<>();
-        User cekData = userRepository.getById(user);
+        Order cekData = orderRepository.getById(order);
         if (cekData == null){
             map.put("message", "Data not Found");
             return map;
@@ -59,15 +59,15 @@ public class UserImpl implements UserService {
 
         cekData.setDeleted_date(new Date());
 
-        User doDelete = userRepository.save(cekData);
+        Order doDelete = orderRepository.save(cekData);
         map.put("Data", doDelete);
         return map;
     }
 
     @Override
-    public Map getById(Long user) {
+    public Map getById(Long order) {
         Map map = new HashMap<>();
-        Optional<User> getBaseOptional = userRepository.findById(user);
+        Optional<Order> getBaseOptional = orderRepository.findById(order);
         if(getBaseOptional.isEmpty()){
             map.put("message", "Data not Found");
             return map;

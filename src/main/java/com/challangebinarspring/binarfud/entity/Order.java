@@ -23,13 +23,13 @@ public class Order extends AbstractDate implements Serializable {
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "order_time")
-    private Date orderTime;
+    public Date orderTime;
 
     @Column(name = "destnation_address")
-    private String destinationAddress;
+    public String destinationAddress;
 
     @Column(name = "complated")
-    private boolean complated;
+    public boolean complated;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

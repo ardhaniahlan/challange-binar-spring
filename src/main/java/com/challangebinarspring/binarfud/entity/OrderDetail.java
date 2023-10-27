@@ -20,10 +20,10 @@ public class OrderDetail extends AbstractDate implements Serializable {
     private Long id;
 
     @Column(name = "quantity")
-    private int quantity;
+    public int quantity;
 
     @Column(name = "total_price")
-    private Double totalPrice;
+    public Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
