@@ -5,9 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
@@ -20,5 +24,25 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query(value = "select e from User e ")
     public Page<User> getALlPage(Pageable pageable);
+
+    //Store prosedure
+    @Query(value = "select * from getemployee6()",nativeQuery = true)
+    public List<Object> getListSP();
+
+    @Modifying
+    @Procedure("insert1")
+    void saveEmployeeSP(@Param("resid") Long resid,@Param("rqnama") String rqnama);
+    @Modifying
+    @Procedure("update_employee")
+    void updateEmployeeSP(@Param("resid") Long resid,@Param("rqnama") String rqnama);
+    @Modifying
+    @Procedure("deleted_employee1")
+    void deleted_employee1(@Param("resid") Long resid);
+    @Modifying
+    @Procedure("getemployeebyid")
+    Object getemployeebyid(@Param("resid") Long resid);
+    @Modifying
+    @Procedure("getemployee6")
+    List<Object> getemployee6();
 
 }
