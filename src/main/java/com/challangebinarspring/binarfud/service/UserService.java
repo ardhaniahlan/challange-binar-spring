@@ -7,6 +7,6 @@ import java.util.Map;
 public interface UserService {
     Map save(User user);
     Map update(User user);
-    Map delete(Long user);
+    Map delete(User user);
     Map getById(Long user);
 }

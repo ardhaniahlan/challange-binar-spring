@@ -7,6 +7,6 @@ import java.util.Map;
 public interface OrderService {
     Map save(Order order);
     Map update(Order order);
-    Map delete(Long order);
+    Map delete(Order order);
     Map getById(Long order);
 }

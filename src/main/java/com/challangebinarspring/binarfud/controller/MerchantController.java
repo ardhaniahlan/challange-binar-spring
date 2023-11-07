@@ -1,11 +1,10 @@
 package com.challangebinarspring.binarfud.controller;
 
+import com.challangebinarspring.binarfud.Config;
 import com.challangebinarspring.binarfud.entity.Merchant;
-import com.challangebinarspring.binarfud.entity.Order;
 import com.challangebinarspring.binarfud.repository.MerchantRepository;
-import com.challangebinarspring.binarfud.repository.OrderRepository;
 import com.challangebinarspring.binarfud.service.MerchantService;
-import com.challangebinarspring.binarfud.service.OrderService;
+import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,24 +33,47 @@ public class MerchantController {
     @Autowired
     public MerchantRepository merchantRepository;
 
+    @Autowired
+    public Response response;
+
     @PostMapping(value = {"/save", "/save/"})
     public ResponseEntity<Map> save(@RequestBody Merchant request){
-        return new ResponseEntity<Map>(merchantService.save(request), HttpStatus.OK);
+        try{
+            if (request.getMerchantName().isEmpty()){
+                return new ResponseEntity<Map>(response.errorResponse(Config.NAME_REQUIRED), HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<Map>(merchantService.save(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping(value = {"/update", "/update/"})
     public ResponseEntity<Map> update(@RequestBody Merchant request){
-        return new ResponseEntity<Map>(merchantService.update(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(merchantService.update(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @DeleteMapping(value = {"/delete", "/delete/"})
     public ResponseEntity<Map> delete(@RequestBody Merchant request){
-        return new ResponseEntity<Map>(merchantService.delete(request.getId()), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(merchantService.delete(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/{id}", "/{id}/"})
     public ResponseEntity<Map> getById(@PathVariable("id") Long id){
-        return new ResponseEntity<Map>(merchantService.getById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(merchantService.getById(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/list-merchant", "/list-merchant/"})

@@ -2,9 +2,8 @@ package com.challangebinarspring.binarfud.controller;
 
 import com.challangebinarspring.binarfud.entity.Order;
 import com.challangebinarspring.binarfud.repository.OrderRepository;
-import com.challangebinarspring.binarfud.repository.UserRepository;
 import com.challangebinarspring.binarfud.service.OrderService;
-import com.challangebinarspring.binarfud.service.UserService;
+import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,24 +31,43 @@ public class OrderController {
     @Autowired
     public OrderRepository orderRepository;
 
+    @Autowired
+    public Response response;
+
     @PostMapping(value = {"/save", "/save/"})
     public ResponseEntity<Map> save(@RequestBody Order request){
-        return new ResponseEntity<Map>(orderService.save(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderService.save(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping(value = {"/update", "/update/"})
     public ResponseEntity<Map> update(@RequestBody Order request){
-        return new ResponseEntity<Map>(orderService.update(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderService.update(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value = {"/delete", "/delete/"})
     public ResponseEntity<Map> delete(@RequestBody Order request){
-        return new ResponseEntity<Map>(orderService.delete(request.getId()), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderService.delete(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/{id}", "/{id}/"})
     public ResponseEntity<Map> getById(@PathVariable("id") Long id){
-        return new ResponseEntity<Map>(orderService.getById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderService.getById(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/list-order", "/list-order/"})

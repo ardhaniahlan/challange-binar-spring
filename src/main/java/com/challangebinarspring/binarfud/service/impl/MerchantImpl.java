@@ -1,9 +1,11 @@
 package com.challangebinarspring.binarfud.service.impl;
 
+import com.challangebinarspring.binarfud.Config;
 import com.challangebinarspring.binarfud.entity.Merchant;
-import com.challangebinarspring.binarfud.entity.User;
 import com.challangebinarspring.binarfud.repository.MerchantRepository;
 import com.challangebinarspring.binarfud.service.MerchantService;
+import com.challangebinarspring.binarfud.utils.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,55 +15,77 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class MerchantImpl implements MerchantService {
 
     @Autowired
     public MerchantRepository merchantRepository;
 
+    @Autowired
+    public Response response;
+
     @Override
     public Map save(Merchant merchant) {
-        Map map = new HashMap<>();
-        Merchant doSave = merchantRepository.save(merchant);
+        try{
+            log.info("Save Merchant");
 
-        map.put("Data", doSave);
-        map.put("message","Success");
-        map.put("status",200);
+            if (merchant.getMerchantName().isEmpty()){
+                return response.errorResponse(Config.NAME_REQUIRED);
+            }
 
-        return map;
+            return response.successResponse(merchantRepository.save(merchant));
+        } catch (Exception e){
+            log.error("Save Merchant Error: " + e.getMessage());
+            return response.errorResponse("Save Merchant Error: " + e.getMessage());
+        }
     }
 
     @Override
     public Map update(Merchant merchant) {
-        Map map = new HashMap<>();
-        Merchant cekData = merchantRepository.getById(merchant.getId());
-        if (cekData == null){
-            map.put("message", "Data not Found");
-            return map;
+        try {
+            log.info("Update Merchant");
+
+            // check data
+            if (merchant.getId() == null){
+                return response.errorResponse(Config.ID_REQUIRED);
+            }
+            Optional<Merchant> checkData = merchantRepository.findById(merchant.getId());
+            if (checkData.isEmpty()){
+                return response.errorResponse(Config.MERCHANT_NOT_FOUND);
+            }
+
+            // update
+            checkData.get().setMerchantName(merchant.merchantName);
+            checkData.get().setMerchantLocation(merchant.merchantLocation);
+            checkData.get().setOpen(merchant.open);
+
+            return response.successResponse(merchantRepository.save(checkData.get()));
+        } catch (Exception e){
+            log.error("Update Merchant Error: " + e.getMessage());
+            return response.errorResponse("Update Merchant Error: " + e.getMessage());
         }
-
-        cekData.setMerchantName(merchant.merchantName);
-        cekData.setMerchantLocation(merchant.merchantLocation);
-        cekData.setOpen(merchant.open);
-
-        Merchant doUpdate = merchantRepository.save(cekData);
-        map.put("Data", doUpdate);
-        return map;
     }
 
     @Override
-    public Map delete(Long merchant) {
-        Map map = new HashMap<>();
-        Merchant cekData = merchantRepository.getById(merchant);
-        if (cekData == null){
-            map.put("message", "Data not Found");
-            return map;
+    public Map delete(Merchant merchant) {
+        try {
+            log.info("Delete Merchant");
+
+            if (merchant.getId() == null){
+                return response.errorResponse(Config.ID_REQUIRED);
+            }
+            Optional<Merchant> checkData = merchantRepository.findById(merchant.getId());
+            if (checkData.isEmpty()){
+                return response.errorResponse(Config.MERCHANT_NOT_FOUND);
+            }
+
+            checkData.get().setDeleted_date(new Date());
+
+            return response.successResponse(Config.DELETE_SUCCESS);
+        } catch (Exception e){
+            log.error("Delete Merchant Error: " + e.getMessage());
+            return response.errorResponse("Delete Merchant Error: " + e.getMessage());
         }
-
-        cekData.setDeleted_date(new Date());
-
-        Merchant doDelete = merchantRepository.save(cekData);
-        map.put("Data", doDelete);
-        return map;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.challangebinarspring.binarfud.controller;
 import com.challangebinarspring.binarfud.entity.OrderDetail;
 import com.challangebinarspring.binarfud.repository.OrderDetailRepository;
 import com.challangebinarspring.binarfud.service.OrderDetailService;
+import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,24 +32,43 @@ public class OrderDetailController {
     @Autowired
     public OrderDetailRepository orderDetailRepository;
 
+    @Autowired
+    public Response response;
+
     @PostMapping(value = {"/save", "/save/"})
     public ResponseEntity<Map> save(@RequestBody OrderDetail request){
-        return new ResponseEntity<Map>(orderDetailService.save(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderDetailService.save(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping(value = {"/update", "/update/"})
     public ResponseEntity<Map> update(@RequestBody OrderDetail request){
-        return new ResponseEntity<Map>(orderDetailService.update(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderDetailService.update(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value = {"/delete", "/delete/"})
     public ResponseEntity<Map> delete(@RequestBody OrderDetail request){
-        return new ResponseEntity<Map>(orderDetailService.delete(request.getId()), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderDetailService.delete(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/{id}", "/{id}/"})
     public ResponseEntity<Map> getById(@PathVariable("id") Long id){
-        return new ResponseEntity<Map>(orderDetailService.getById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(orderDetailService.getById(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/list-order-detail", "/list-order-detail/"})

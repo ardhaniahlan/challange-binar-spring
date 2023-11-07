@@ -3,6 +3,7 @@ package com.challangebinarspring.binarfud.controller;
 import com.challangebinarspring.binarfud.entity.Product;
 import com.challangebinarspring.binarfud.repository.ProductRepository;
 import com.challangebinarspring.binarfud.service.ProductService;
+import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@RestController
 @RequestMapping("/v1/product")
 public class ProductController {
     @Autowired
@@ -32,27 +32,46 @@ public class ProductController {
     @Autowired
     public ProductRepository productRepository;
 
+    @Autowired
+    public Response response;
+
     @PostMapping(value = {"/save", "/save/"})
     public ResponseEntity<Map> save(@RequestBody Product request){
-        return new ResponseEntity<Map>(productService.save(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(productService.save(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping(value = {"/update", "/update/"})
     public ResponseEntity<Map> update(@RequestBody Product request){
-        return new ResponseEntity<Map>(productService.update(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(productService.update(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value = {"/delete", "/delete/"})
     public ResponseEntity<Map> delete(@RequestBody Product request){
-        return new ResponseEntity<Map>(productService.delete(request.getId()), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(productService.delete(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/{id}", "/{id}/"})
     public ResponseEntity<Map> getById(@PathVariable("id") Long id){
-        return new ResponseEntity<Map>(productService.getById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(productService.getById(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(value = {"/list-order-detail", "/list-order-detail/"})
+    @GetMapping(value = {"/list-product", "/list-product/"})
     public ResponseEntity<Map> listQuizHeaderSpec(
             @RequestParam() Integer page,
             @RequestParam(required = true) Integer size,

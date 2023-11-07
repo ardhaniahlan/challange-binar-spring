@@ -3,6 +3,7 @@ package com.challangebinarspring.binarfud.controller;
 import com.challangebinarspring.binarfud.entity.User;
 import com.challangebinarspring.binarfud.repository.UserRepository;
 import com.challangebinarspring.binarfud.service.UserService;
+import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/user")
-public class UserController {
+public class    UserController {
     @Autowired
     public SimpleStringUtils simpleStringUtils ;
 
@@ -31,24 +31,43 @@ public class UserController {
     @Autowired
     public UserRepository userRepository;
 
+    @Autowired
+    public Response response;
+
     @PostMapping(value = {"/save", "/save/"})
     public ResponseEntity<Map> save(@RequestBody User request){
-        return new ResponseEntity<Map>(userService.save(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(userService.save(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping(value = {"/update", "/update/"})
     public ResponseEntity<Map> update(@RequestBody User request){
-        return new ResponseEntity<Map>(userService.update(request), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(userService.update(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value = {"/delete", "/delete/"})
     public ResponseEntity<Map> delete(@RequestBody User request){
-        return new ResponseEntity<Map>(userService.delete(request.getId()), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(userService.delete(request), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/{id}", "/{id}/"})
     public ResponseEntity<Map> getById(@PathVariable("id") Long id){
-        return new ResponseEntity<Map>(userService.getById(id), HttpStatus.OK);
+        try{
+            return new ResponseEntity<Map>(userService.getById(id), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<Map>(response.errorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = {"/list", "/list/"})

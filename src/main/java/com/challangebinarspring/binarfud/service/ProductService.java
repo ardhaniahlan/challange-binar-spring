@@ -7,6 +7,6 @@ import java.util.Map;
 public interface ProductService {
     Map save(Product product);
     Map update(Product product);
-    Map delete(Long product);
+    Map delete(Product product);
     Map getById(Long product);
 }

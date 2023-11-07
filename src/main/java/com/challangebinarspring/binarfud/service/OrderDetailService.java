@@ -7,6 +7,6 @@ import java.util.Map;
 public interface OrderDetailService {
     Map save(OrderDetail orderDetail);
     Map update(OrderDetail orderDetail);
-    Map delete(Long orderDetail);
+    Map delete(OrderDetail orderDetail);
     Map getById(Long orderDetail);
 }
