@@ -1,5 +1,6 @@
 package com.challangebinarspring.binarfud.repository;
 
+import com.challangebinarspring.binarfud.entity.Product;
 import com.challangebinarspring.binarfud.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +17,15 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    @Query("FROM User u WHERE LOWER(u.username) = LOWER(?1)")
+    User findOneByUsername(String username);
+
+    @Query("FROM User u WHERE u.otp = ?1")
+    User findOneByOTP(String otp);
+
+    @Query("FROM User u WHERE LOWER(u.username) = LOWER(:username)")
+    User checkExistingEmail(String username);
 
     @Query(value = "select c from User c where c.id = :userId")
     public User getById(@Param("userId") Long userId);

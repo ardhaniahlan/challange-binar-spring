@@ -5,7 +5,8 @@ import com.challangebinarspring.binarfud.repository.ProductRepository;
 import com.challangebinarspring.binarfud.service.ProductService;
 import com.challangebinarspring.binarfud.utils.Response;
 import com.challangebinarspring.binarfud.utils.SimpleStringUtils;
-import jakarta.persistence.criteria.Predicate;
+import javax.persistence.criteria.Predicate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

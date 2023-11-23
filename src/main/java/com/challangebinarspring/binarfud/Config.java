@@ -8,6 +8,7 @@ public class Config {
     public static String NAME_REQUIRED = "Name is Required";
     public static String ID_REQUIRED = "Id is Required.";
     public static String DELETE_SUCCESS = "Delete Success.";
+    public static String isRequired = "Dibutuhkan";
 
     //Merchant
     public static String MERCHANT_REQUIRED = "Merchant is Required.";
